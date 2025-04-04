@@ -1,14 +1,16 @@
-import { response } from "express";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-const express = require('express')
-const app = express()
-// const port = process.env.SERVER_PORT;
-const port = 3001;
+import express = require("express");
+import cors = require("cors");
+import userRouter from "./controllers/user/routes";
 
-app.get('/', (req: Request, res: Response) => {
-    response.send('Hello World!')
-})
+const app = express();
+app.use(express.json());
+app.use(cors());
+app.use(userRouter);
 
+const port = process.env.SERVER_PORT;
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+  console.log(`Приложение запущено -> http://localhost:${port}`);
+});
