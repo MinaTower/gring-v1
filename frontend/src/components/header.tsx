@@ -41,10 +41,10 @@ const Header = () => {
               <>
                 <li>
                   <Link
-                    to="/plant/create"
+                    to="/routes/create"
                     className="hover:bg-base-300 rounded-md p-1 text-lg transition-colors"
                   >
-                    Добавить
+                    Создать маршрут
                   </Link>
                 </li>
                 <li>

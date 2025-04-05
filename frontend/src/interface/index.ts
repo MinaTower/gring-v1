@@ -31,6 +31,19 @@ export interface RegUserData {
   category: string;
 }
 
+export interface CreateRouteData {
+  name: string;
+  description: string;
+  category: string;
+  coordinates: [number, number][];
+}
+
 export interface WrapperTemplateProps {
   children: React.ReactNode;
+}
+
+export interface RoutesList {
+  name: string;
+  description: string;
+  category: string;
 }

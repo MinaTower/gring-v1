@@ -43,6 +43,7 @@ model Route {
   name        String
   description String
   category    String
+  coordinates Json?
 }
 
 model Category {

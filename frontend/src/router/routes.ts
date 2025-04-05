@@ -3,6 +3,7 @@ import { lazy } from "react";
 const Home = lazy(() => import("@/pages/home/home"));
 const Signup = lazy(() => import("@/pages/user/auth/signup"));
 const Login = lazy(() => import("@/pages/user/auth/login"));
+const CreateRoute = lazy(() => import("@/pages/user/route/map"));
 
 export const appRoutes = [
   { path: "/", component: Home },
@@ -10,4 +11,6 @@ export const appRoutes = [
   { path: "/login", component: Login },
 ];
 
-export const privateRoutes = [];
+export const privateRoutes = [
+  { path: "/routes/create", component: CreateRoute },
+];

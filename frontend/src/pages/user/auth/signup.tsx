@@ -20,8 +20,8 @@ const Signup = () => {
       registUser(
         newUser.email,
         newUser.name,
-        newUser.password,
         newUser.category,
+        newUser.password,
       ),
     onSuccess: () => {
       setEmail("");
