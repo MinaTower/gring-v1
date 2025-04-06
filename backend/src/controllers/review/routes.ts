@@ -1,6 +1,6 @@
 import express = require("express");
 import { Request, Response, NextFunction } from "express";
-import { createRoute, getRoutes, getRouteById } from "./path.controller";
+import { createReview, getReviewsByPlaceId } from "./review.controller";
 
 const router = express.Router();
 
@@ -9,8 +9,7 @@ const asyncHandler =
   (req: Request, res: Response, next: NextFunction) =>
     Promise.resolve(fn(req, res, next)).catch(next);
 
-router.post("/api/routes", asyncHandler(createRoute));
-router.get("/api/routes", asyncHandler(getRoutes));
-router.get("/api/routes/:id", asyncHandler(getRouteById));
+router.post("/api/reviews", asyncHandler(createReview));
+router.get("/api/places/:placeId/reviews", asyncHandler(getReviewsByPlaceId));
 
 export default router;

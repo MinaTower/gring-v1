@@ -63,7 +63,7 @@ export const loginUser = async (req: Request, res: Response) => {
       { expiresIn: "1h" },
     );
     return res.status(200).json({
-      user: { email: user.email },
+      user: { id: user.id, email: user.email, name: user.name },
       token,
     });
   } catch (error) {

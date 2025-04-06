@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { getCategories, registUser } from "@/api/user-api";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { RegUserData } from "@/interface";
@@ -9,6 +10,8 @@ const Signup = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [category, setCategory] = useState("");
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
@@ -28,6 +31,10 @@ const Signup = () => {
       setName("");
       setPassword("");
       setCategory("");
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     },
     onError: (error) => {
       console.error(error);
@@ -71,6 +78,11 @@ const Signup = () => {
         onSubmit={onSubmit}
         showSignupLink={false}
       />
+      {success && (
+        <div className="mx-auto mt-4 max-w-sm rounded-lg bg-green-100 p-4 text-green-800 shadow">
+          Успешная регистрация! Перенаправляем на страницу входа...
+        </div>
+      )}
     </>
   );
 };

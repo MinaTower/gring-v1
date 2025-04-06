@@ -9,8 +9,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   const mutation = useMutation({
-    mutationFn: (oldUser: LogUserData) =>
-      loginUser(oldUser.email, oldUser.password),
+    mutationFn: (user: LogUserData) => loginUser(user.email, user.password),
     onSuccess: (data) => {
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
@@ -22,9 +21,10 @@ const Login = () => {
       console.error(error);
     },
   });
-  const onSubmit = async (e: React.FormEvent) => {
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    return mutation.mutateAsync({
+    await mutation.mutateAsync({
       email,
       password,
     });
@@ -46,11 +46,11 @@ const Login = () => {
         title="Войти в GRing"
         items={items}
         buttonText="Войти"
-        onSubmit={onSubmit}
+        onSubmit={handleLogin}
         showSignupLink={true}
       />
 
-      {mutation.isError && <p>Ошибка регистрации!</p>}
+      {mutation.isError && <p>Ошибка входа!</p>}
       {mutation.isSuccess && <p>Вход прошёл успешно!</p>}
     </>
   );

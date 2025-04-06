@@ -1,9 +1,10 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Suspense } from "react";
 import { appRoutes, privateRoutes } from "./routes";
+import PrivateRoute from "./private-route";
 import "./style.css";
 
-const allRoutes = [...appRoutes, ...privateRoutes];
+// const allRoutes = [...appRoutes, ...privateRoutes];
 
 const AppRouter = () => {
   return (
@@ -16,11 +17,22 @@ const AppRouter = () => {
         }
       >
         <Routes>
-          {allRoutes.map((route) => (
+          {appRoutes.map((route) => (
             <Route
               key={route.path}
               path={route.path}
               element={<route.component />}
+            />
+          ))}
+          {privateRoutes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={
+                <PrivateRoute>
+                  <route.component />
+                </PrivateRoute>
+              }
             />
           ))}
           <Route path="*" element={<Navigate to="/" replace />} />

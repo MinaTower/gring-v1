@@ -5,8 +5,6 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "check": "npx prettier --check .",
-    "write": "npx prettier --write .",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host"
   },

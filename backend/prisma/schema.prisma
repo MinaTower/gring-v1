@@ -14,39 +14,74 @@ model User {
   name              String
   favouriteCategory String
 
-  reviews Reviews[]
+  reviews        Reviews[]
+  favoriteRoutes FavoriteRoute[]
 }
 
 model Reviews {
-  id      Int    @id @default(autoincrement())
-  userId  Int
-  placeId Int
-  rating  Int
-  comment String
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  placeId   Int
+  rating    Int
+  comment   String
+  createdAt DateTime @default(now())
 
   user  User  @relation(fields: [userId], references: [id])
   place Place @relation(fields: [placeId], references: [id])
 }
 
-model Place {
-  id      Int    @id @default(autoincrement())
-  name    String
-  rating  Int
-  address String
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String @unique
 
-  Reviews Reviews[]
+  places Place[]
+}
+
+model Place {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  rating      Int
+  coordinates Json?
+
+  reviews     Reviews[]
+  categories  Category[]
+  routePlaces RoutePlaces[]
 }
 
 model Route {
-  id          Int    @id @default(autoincrement())
-  uuid        String @unique @default(uuid())
+  id          Int      @id @default(autoincrement())
+  uuid        String   @unique @default(uuid())
   name        String
   description String
   category    String
   coordinates Json?
+  createdAt   DateTime @default(now())
+
+  routePlaces   RoutePlaces[]
+  favoriteUsers FavoriteRoute[]
 }
 
-model Category {
-  id   Int    @id @default(autoincrement())
-  name String @unique
+model RoutePlaces {
+  id      Int @id @default(autoincrement())
+  routeId Int
+  placeId Int
+  order   Int
+
+  route Route @relation(fields: [routeId], references: [id])
+  place Place @relation(fields: [placeId], references: [id])
+
+  @@unique([routeId, placeId])
+}
+
+model FavoriteRoute {
+  id      Int      @id @default(autoincrement())
+  userId  Int
+  routeId Int
+  addedAt DateTime @default(now())
+
+  user  User  @relation(fields: [userId], references: [id])
+  route Route @relation(fields: [routeId], references: [id])
+
+  @@unique([userId, routeId])
 }

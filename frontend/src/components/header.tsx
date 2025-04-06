@@ -37,11 +37,27 @@ const Header = () => {
             <span className="font-bold">GRing</span>
           </Link>
           <ul className="flex items-center justify-around space-x-4 px-1 py-3">
+            <li>
+              <Link
+                to="/place/list"
+                className="hover:bg-base-300 rounded-md p-1 text-lg transition-colors"
+              >
+                Список мест
+              </Link>
+            </li>
             {user ? (
               <>
                 <li>
                   <Link
-                    to="/routes/create"
+                    to="/place/create"
+                    className="hover:bg-base-300 rounded-md p-1 text-lg transition-colors"
+                  >
+                    Добавить место
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/route/create"
                     className="hover:bg-base-300 rounded-md p-1 text-lg transition-colors"
                   >
                     Создать маршрут

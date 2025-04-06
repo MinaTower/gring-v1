@@ -1,3 +1,5 @@
+import { JSX } from "react";
+
 export interface LogUserData {
   email: string;
   password: string;
@@ -43,7 +45,42 @@ export interface WrapperTemplateProps {
 }
 
 export interface RoutesList {
+  id: string;
   name: string;
   description: string;
   category: string;
+}
+
+export interface Place {
+  id: number;
+  name: string;
+  description: string;
+  category?: string;
+  rating?: number;
+  coordinates?: [number, number];
+}
+
+export interface PrivateRouteProps {
+  children: JSX.Element;
+}
+
+export interface Review {
+  id: number;
+  userId: number;
+  placeId: number;
+  rating: number;
+  comment: string;
+  createdAt: string;
+  user?: {
+    name: string;
+  };
+}
+
+export interface RouteDetails {
+  id: number;
+  name: string;
+  description: string;
+  category: string;
+  coordinates: [number, number][];
+  createdAt: string;
 }
