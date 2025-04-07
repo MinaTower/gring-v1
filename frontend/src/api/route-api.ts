@@ -31,5 +31,3 @@ export const getRouteById = async (id: string) => {
     throw error;
   }
 };
-
-// export const postRoute = async (id: string)

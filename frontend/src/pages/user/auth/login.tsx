@@ -49,9 +49,6 @@ const Login = () => {
         onSubmit={handleLogin}
         showSignupLink={true}
       />
-
-      {mutation.isError && <p>Ошибка входа!</p>}
-      {mutation.isSuccess && <p>Вход прошёл успешно!</p>}
     </>
   );
 };

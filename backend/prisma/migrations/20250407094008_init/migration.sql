@@ -1,6 +1,7 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "uuid" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -28,10 +29,10 @@ CREATE TABLE "Category" (
 -- CreateTable
 CREATE TABLE "Place" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "uuid" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "rating" INTEGER NOT NULL,
-    "address" TEXT NOT NULL,
     "coordinates" JSONB
 );
 
@@ -67,6 +68,26 @@ CREATE TABLE "FavoriteRoute" (
 );
 
 -- CreateTable
+CREATE TABLE "Collection" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "uuid" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "userId" INTEGER NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME NOT NULL,
+    CONSTRAINT "Collection_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "CollectionRoutes" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "collectionId" INTEGER NOT NULL,
+    "routeId" INTEGER NOT NULL,
+    CONSTRAINT "CollectionRoutes_collectionId_fkey" FOREIGN KEY ("collectionId") REFERENCES "Collection" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT "CollectionRoutes_routeId_fkey" FOREIGN KEY ("routeId") REFERENCES "Route" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "_CategoryToPlace" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,
@@ -75,10 +96,16 @@ CREATE TABLE "_CategoryToPlace" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_uuid_key" ON "User"("uuid");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Category_name_key" ON "Category"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Place_uuid_key" ON "Place"("uuid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Route_uuid_key" ON "Route"("uuid");
@@ -88,6 +115,12 @@ CREATE UNIQUE INDEX "RoutePlaces_routeId_placeId_key" ON "RoutePlaces"("routeId"
 
 -- CreateIndex
 CREATE UNIQUE INDEX "FavoriteRoute_userId_routeId_key" ON "FavoriteRoute"("userId", "routeId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Collection_uuid_key" ON "Collection"("uuid");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "CollectionRoutes_collectionId_routeId_key" ON "CollectionRoutes"("collectionId", "routeId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_CategoryToPlace_AB_unique" ON "_CategoryToPlace"("A", "B");

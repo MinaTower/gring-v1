@@ -4,8 +4,6 @@ import { appRoutes, privateRoutes } from "./routes";
 import PrivateRoute from "./private-route";
 import "./style.css";
 
-// const allRoutes = [...appRoutes, ...privateRoutes];
-
 const AppRouter = () => {
   return (
     <main>

@@ -63,7 +63,13 @@ export const loginUser = async (req: Request, res: Response) => {
       { expiresIn: "1h" },
     );
     return res.status(200).json({
-      user: { id: user.id, email: user.email, name: user.name },
+      user: {
+        id: user.id,
+        uuid: user.uuid,
+        email: user.email,
+        name: user.name,
+        favouriteCategory: user.favouriteCategory,
+      },
       token,
     });
   } catch (error) {
@@ -79,12 +85,19 @@ export const detailUser = async (req: Request, res: Response) => {
     }
     const user = await prisma.user.findUnique({
       where: { email },
-      // include: { plants: true },
+      include: {
+        favoriteRoutes: {
+          include: {
+            route: true,
+          },
+        },
+      },
     });
     if (!user) {
       return res.status(404).json({ message: "Пользователь не найден" });
     }
-    return res.json(user);
+    const { password, ...userWithoutPassword } = user;
+    return res.json(userWithoutPassword);
   } catch (error) {
     return handleError(res, error);
   }
@@ -94,6 +107,95 @@ export const getCategory = async (req: Request, res: Response) => {
   try {
     const categories = await prisma.category.findMany();
     return res.json(categories);
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+export const addToFavorites = async (req: Request, res: Response) => {
+  try {
+    const { userId, routeId } = req.body;
+    if (!userId || !routeId) {
+      return res
+        .status(400)
+        .json({ message: "Необходимо указать ID пользователя и маршрута" });
+    }
+
+    const existingFavorite = await prisma.favoriteRoute.findFirst({
+      where: {
+        userId: Number(userId),
+        routeId: Number(routeId),
+      },
+    });
+
+    if (existingFavorite) {
+      return res.status(400).json({ message: "Маршрут уже в избранном" });
+    }
+
+    const newFavorite = await prisma.favoriteRoute.create({
+      data: {
+        userId: Number(userId),
+        routeId: Number(routeId),
+      },
+    });
+
+    return res.status(201).json(newFavorite);
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+export const removeFromFavorites = async (req: Request, res: Response) => {
+  try {
+    const { userId, routeId } = req.body;
+    if (!userId || !routeId) {
+      return res
+        .status(400)
+        .json({ message: "Необходимо указать ID пользователя и маршрута" });
+    }
+
+    const favorite = await prisma.favoriteRoute.findFirst({
+      where: {
+        userId: Number(userId),
+        routeId: Number(routeId),
+      },
+    });
+
+    if (!favorite) {
+      return res.status(404).json({ message: "Маршрут не найден в избранном" });
+    }
+
+    await prisma.favoriteRoute.delete({
+      where: {
+        id: favorite.id,
+      },
+    });
+
+    return res.status(200).json({ message: "Маршрут удален из избранного" });
+  } catch (error) {
+    return handleError(res, error);
+  }
+};
+
+export const getUserFavoriteRoutes = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ message: "Необходимо указать ID пользователя" });
+    }
+
+    const favorites = await prisma.favoriteRoute.findMany({
+      where: {
+        userId: Number(userId),
+      },
+      include: {
+        route: true,
+      },
+    });
+
+    return res.json(favorites);
   } catch (error) {
     return handleError(res, error);
   }

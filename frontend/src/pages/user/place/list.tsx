@@ -23,61 +23,81 @@ const PlaceList = () => {
     : places;
 
   return (
-    <WrapperTemplate>
-      <div className="mb-4">
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="rounded border border-gray-300 p-2"
-        >
-          <option value="">Все категории</option>
-          {categories.map((cat: OptionCategory) => (
-            <option key={cat.id} value={cat.name}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
-      </div>
-      {filteredPlaces && filteredPlaces.length > 0 ? (
-        <ul className="grid grid-cols-4 gap-6 max-lg:grid-cols-2 max-sm:gap-2 max-sm:p-2">
-          {filteredPlaces.map((place) => (
-            <li key={place.id}>
-              <Link to={`/place/detail/${place.id}`}>
-                <div className="h-full rounded-2xl border border-gray-200 p-6 transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-md">
-                  <div className="mb-2 flex items-center justify-between">
-                    <h2 className="font-sans text-base font-bold max-sm:text-sm">
-                      {place.name}
-                    </h2>
-                    {place.rating !== undefined && place.rating > 0 && (
-                      <div className="flex items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          height="24px"
-                          viewBox="0 -960 960 960"
-                          width="24px"
-                          fill="#F9DB78"
-                        >
-                          <path d="m233-120 65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z" />
-                        </svg>
-                        <span className="text-sm">{place.rating}/5</span>
-                      </div>
-                    )}
+    <section className="py-8">
+      <WrapperTemplate>
+        <h1 className="mb-8 text-3xl font-extrabold text-gray-800">
+          Список мест
+        </h1>
+        <div className="mb-6">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm text-gray-700 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+          >
+            <option value="">Все категории</option>
+            {categories.map((cat: OptionCategory) => (
+              <option key={cat.id} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        {filteredPlaces && filteredPlaces.length > 0 ? (
+          <ul className="grid grid-cols-4 gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
+            {filteredPlaces.map((place) => (
+              <li key={place.id} className="flex">
+                <Link
+                  to={`/place/detail/${place.id}`}
+                  className="flex h-full w-full flex-col"
+                >
+                  <div className="flex h-full flex-col rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg active:translate-y-0 max-lg:p-4">
+                    <div className="mb-4 flex items-center justify-between">
+                      <h2 className="text-lg font-semibold text-gray-800 max-sm:text-base">
+                        {place.name}
+                      </h2>
+                      {place.rating !== undefined && place.rating > 0 && (
+                        <div className="flex items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            height="20px"
+                            viewBox="0 -960 960 960"
+                            width="20px"
+                            fill="#F9DB78"
+                          >
+                            <path d="m233-120 65-281L80-590l288-25 112-265 112 265 288 25-218 189 65 281-247-149-247 149Z" />
+                          </svg>
+                          <span className="ml-1 text-sm text-gray-600">
+                            {place.rating}/5
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <p className="mb-4 line-clamp-3 text-sm text-gray-600">
+                      {place.description}
+                    </p>
+                    <div className="mt-auto">
+                      <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600">
+                        {place.category}
+                      </span>
+                    </div>
                   </div>
-                  <p className="mb-2 line-clamp-2 text-sm text-gray-700">
-                    {place.description}
-                  </p>
-                  <span className="inline-block rounded-full bg-blue-100 px-2 py-1 text-xs">
-                    {place.category}
-                  </span>
-                </div>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Места не найдены.</p>
-      )}
-    </WrapperTemplate>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-12 text-center">
+            <p className="mb-4 text-gray-600">Места не найдены.</p>
+            <Link
+              to="/place/create"
+              className="rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+            >
+              Добавить место
+            </Link>
+          </div>
+        )}
+      </WrapperTemplate>
+    </section>
   );
 };
 

@@ -11,25 +11,30 @@ const Home = () => {
   });
 
   return (
-    <section>
+    <section className="py-8">
       <WrapperTemplate>
-        <h1 className="mb-6 text-2xl font-bold">Доступные маршруты</h1>
+        <h1 className="mb-8 text-3xl font-extrabold text-gray-800">
+          Доступные маршруты
+        </h1>
         {routes && routes.length > 0 ? (
-          <ul className="grid grid-cols-4 gap-6 max-lg:grid-cols-2 max-sm:gap-2 max-sm:p-2">
+          <ul className="grid grid-cols-4 gap-8 max-lg:grid-cols-2 max-sm:grid-cols-1">
             {routes.map((route) => (
-              <li key={route.id}>
-                <Link to={`/route/detail/${route.id}`}>
-                  <div className="h-full rounded-2xl border border-gray-200 p-6 transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-md active:-translate-y-1 max-lg:p-2">
-                    <div className="mb-2">
-                      <h2 className="font-sans text-base font-bold max-sm:text-sm">
+              <li key={route.id} className="flex">
+                <Link
+                  to={`/route/detail/${route.id}`}
+                  className="flex h-full w-full flex-col"
+                >
+                  <div className="flex h-full flex-col rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-transform duration-300 hover:-translate-y-2 hover:shadow-lg active:translate-y-0 max-lg:p-4">
+                    <div className="mb-4">
+                      <h2 className="text-lg font-semibold text-gray-800 max-sm:text-base">
                         {route.name}
                       </h2>
                     </div>
-                    <p className="mb-3 line-clamp-3 text-sm text-gray-700">
+                    <p className="mb-4 line-clamp-3 text-sm text-gray-600">
                       {route.description}
                     </p>
                     <div className="mt-auto">
-                      <span className="inline-block rounded-full bg-blue-100 px-2 py-1 text-xs">
+                      <span className="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-600">
                         {route.category}
                       </span>
                     </div>
@@ -39,11 +44,11 @@ const Home = () => {
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 p-12 text-center">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 bg-white p-12 text-center">
             <p className="mb-4 text-gray-600">Маршруты не найдены.</p>
             <Link
               to="/route/create"
-              className="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+              className="rounded-md bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700"
             >
               Создать маршрут
             </Link>

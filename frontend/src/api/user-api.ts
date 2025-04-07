@@ -53,3 +53,41 @@ export const getCategories = async () => {
     throw error;
   }
 };
+
+export const addRouteToFavorites = async (userId: number, routeId: number) => {
+  try {
+    const response = await axios.post(`${API_BASE}/favorites`, {
+      userId,
+      routeId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const removeRouteFromFavorites = async (
+  userId: number,
+  routeId: number,
+) => {
+  try {
+    const response = await axios.delete(`${API_BASE}/favorites`, {
+      data: { userId, routeId },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+export const getUserFavorites = async (userId: number) => {
+  try {
+    const response = await axios.get(`${API_BASE}/favorites/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

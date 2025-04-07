@@ -12,11 +12,26 @@ import {
 import "leaflet/dist/leaflet.css";
 import { useState, useEffect } from "react";
 import { getListPlaces } from "@/api/place-api";
-import { Place, RouteDetails } from "@/interface";
+import {
+  addRouteToFavorites,
+  removeRouteFromFavorites,
+  getUserFavorites,
+} from "@/api/user-api";
+import { FavoriteRoute, Place, RouteDetails, User } from "@/interface";
 
 const RouteDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [routePlaces, setRoutePlaces] = useState<Place[]>([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [isInFavorites, setIsInFavorites] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    if (userString) {
+      setUser(JSON.parse(userString));
+    }
+  }, []);
 
   const {
     data: route,
@@ -47,6 +62,51 @@ const RouteDetail = () => {
       setRoutePlaces(placesOnRoute);
     }
   }, [route, allPlaces]);
+
+  useEffect(() => {
+    const checkIfInFavorites = async () => {
+      if (user && id) {
+        try {
+          const favorites = await getUserFavorites(user.id);
+          const isFavorite = favorites.some(
+            (fav: FavoriteRoute) => fav.routeId === Number(id),
+          );
+          setIsInFavorites(isFavorite);
+        } catch (error) {
+          console.error("Ошибка при получении списка избранного:", error);
+        }
+      }
+    };
+
+    checkIfInFavorites();
+  }, [user, id]);
+
+  const handleFavoriteToggle = async () => {
+    if (!user) {
+      alert("Для добавления в избранное необходимо авторизоваться");
+      return;
+    }
+    if (!id) return;
+    setIsLoading(true);
+    try {
+      if (isInFavorites) {
+        await removeRouteFromFavorites(user.id, Number(id));
+        setIsInFavorites(false);
+      } else {
+        await addRouteToFavorites(user.id, Number(id));
+        setIsInFavorites(true);
+      }
+    } catch (error) {
+      console.error("Ошибка при обновлении избранного:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText(window.location.href);
+    alert("URL скопирован");
+  };
 
   if (routeLoading) {
     return (
@@ -97,7 +157,43 @@ const RouteDetail = () => {
     <WrapperTemplate>
       <div className="mx-auto max-w-4xl">
         <div className="mb-8">
-          <h1 className="mb-4 text-3xl font-bold">{route.name}</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="mb-4 text-3xl font-bold">{route.name}</h1>
+            <div className="flex gap-2">
+              {user && (
+                <button
+                  onClick={handleFavoriteToggle}
+                  disabled={isLoading}
+                  className={`flex items-center rounded-full px-4 py-2 ${
+                    isInFavorites
+                      ? "bg-red-100 text-red-600 hover:bg-red-200"
+                      : "bg-blue-100 text-blue-600 hover:bg-blue-200"
+                  }`}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill={isInFavorites ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    className="mr-2 h-5 w-5"
+                  >
+                    <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" />
+                  </svg>
+                  {isLoading
+                    ? "Загрузка..."
+                    : isInFavorites
+                      ? "Удалить из избранного"
+                      : "Добавить в избранное"}
+                </button>
+              )}
+              <button
+                onClick={handleCopyUrl}
+                className="flex items-center rounded-full bg-gray-100 px-4 py-2 text-gray-600 hover:bg-gray-200"
+              >
+                Скопировать URL
+              </button>
+            </div>
+          </div>
           <div className="mb-6 flex items-center">
             <span className="rounded-full bg-blue-100 px-3 py-1 text-sm">
               {route.category}

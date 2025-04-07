@@ -26,6 +26,23 @@ export interface AuthTemplateProps {
   showSignupLink?: boolean;
 }
 
+export interface FavoriteRoute {
+  id: number;
+  userId: number;
+  routeId: number;
+  addedAt: string;
+  route: RouteDetails;
+}
+
+export interface User {
+  id: number;
+  uuid: string;
+  email: string;
+  name: string;
+  favouriteCategory: string;
+  favoriteRoutes?: FavoriteRoute[];
+}
+
 export interface RegUserData {
   email: string;
   name: string;
@@ -36,7 +53,7 @@ export interface RegUserData {
 export interface CreateRouteData {
   name: string;
   description: string;
-  category: string;
+  category?: string;
   coordinates: [number, number][];
 }
 
@@ -46,6 +63,7 @@ export interface WrapperTemplateProps {
 
 export interface RoutesList {
   id: string;
+  uuid: string;
   name: string;
   description: string;
   category: string;
@@ -53,11 +71,12 @@ export interface RoutesList {
 
 export interface Place {
   id: number;
+  uuid: string;
   name: string;
   description: string;
-  category?: string;
   rating?: number;
   coordinates?: [number, number];
+  category?: string;
 }
 
 export interface PrivateRouteProps {
@@ -77,10 +96,7 @@ export interface Review {
 }
 
 export interface RouteDetails {
-  id: number;
-  name: string;
-  description: string;
   category: string;
   coordinates: [number, number][];
-  createdAt: string;
+  places?: Place[];
 }

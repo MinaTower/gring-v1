@@ -15,7 +15,6 @@ const PlaceDetail = () => {
   const [reviewRating, setReviewRating] = useState(5);
   const [showReviewForm, setShowReviewForm] = useState(false);
 
-  // Данные пользователя из localStorage
   const userDataString = localStorage.getItem("user");
   const userData = userDataString ? JSON.parse(userDataString) : null;
   const userId = userData?.id;
@@ -83,7 +82,6 @@ const PlaceDetail = () => {
       </WrapperTemplate>
     );
   }
-
   return (
     <WrapperTemplate>
       <div className="mx-auto max-w-4xl">
@@ -110,14 +108,7 @@ const PlaceDetail = () => {
             )}
           </div>
           <p className="mb-6 text-gray-700">{place.description}</p>
-          {/* {place.address && (
-            <div className="mb-6">
-              <h2 className="mb-2 text-xl font-semibold">Адрес:</h2>
-              <p className="text-gray-700">{place.address}</p>
-            </div>
-          )} */}
         </div>
-
         {place.coordinates && (
           <div className="mb-8">
             <h2 className="mb-4 text-xl font-semibold">Расположение</h2>
@@ -136,20 +127,18 @@ const PlaceDetail = () => {
             </div>
           </div>
         )}
-
         <div className="mb-8">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold">Отзывы</h2>
             {userId && !showReviewForm && (
               <button
                 onClick={() => setShowReviewForm(true)}
-                className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+                className="rounded bg-yellow-400 px-4 py-2 font-medium text-black hover:bg-yellow-500 disabled:bg-gray-300"
               >
                 Оставить отзыв
               </button>
             )}
           </div>
-
           {showReviewForm && (
             <form
               onSubmit={handleSubmitReview}
@@ -207,7 +196,6 @@ const PlaceDetail = () => {
               </div>
             </form>
           )}
-
           {reviewsLoading ? (
             <p className="py-4 text-center">Загрузка отзывов...</p>
           ) : reviewsError ? (

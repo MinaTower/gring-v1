@@ -9,6 +9,7 @@ datasource db {
 
 model User {
   id                Int    @id @default(autoincrement())
+  uuid              String @unique @default(uuid())
   email             String @unique
   password          String
   name              String
@@ -16,6 +17,7 @@ model User {
 
   reviews        Reviews[]
   favoriteRoutes FavoriteRoute[]
+  Collection     Collection[]
 }
 
 model Reviews {
@@ -39,6 +41,7 @@ model Category {
 
 model Place {
   id          Int    @id @default(autoincrement())
+  uuid        String @unique @default(uuid())
   name        String
   description String
   rating      Int
@@ -58,8 +61,9 @@ model Route {
   coordinates Json?
   createdAt   DateTime @default(now())
 
-  routePlaces   RoutePlaces[]
-  favoriteUsers FavoriteRoute[]
+  routePlaces      RoutePlaces[]
+  favoriteUsers    FavoriteRoute[]
+  CollectionRoutes CollectionRoutes[]
 }
 
 model RoutePlaces {
@@ -84,4 +88,28 @@ model FavoriteRoute {
   route Route @relation(fields: [routeId], references: [id])
 
   @@unique([userId, routeId])
+}
+
+model Collection {
+  id        Int      @id @default(autoincrement())
+  uuid      String   @unique @default(uuid())
+  name      String
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  routes CollectionRoutes[]
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model CollectionRoutes {
+  id           Int @id @default(autoincrement())
+  collectionId Int
+  routeId      Int
+
+  collection Collection @relation(fields: [collectionId], references: [id])
+  route      Route      @relation(fields: [routeId], references: [id])
+
+  @@unique([collectionId, routeId])
 }
