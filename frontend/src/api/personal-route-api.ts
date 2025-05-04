@@ -36,10 +36,15 @@ export const generatePersonalRoute = async (
       .filter((place) => place.coordinates)
       .map((place) => place.coordinates as [number, number]);
 
+    const now = new Date();
     const personalRoute: RouteDetails = {
+      id: now.getTime(),
+      name: `${favouriteCategory}`,
+      description: `"${favouriteCategory}"`,
       category: favouriteCategory,
-      coordinates: coordinates,
+      coordinates,
       places: topPlaces,
+      createdAt: now.toISOString(),
     };
 
     return personalRoute;
