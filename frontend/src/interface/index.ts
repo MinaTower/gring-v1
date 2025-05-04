@@ -96,7 +96,11 @@ export interface Review {
 }
 
 export interface RouteDetails {
+  id: number;
+  name: string;
+  description: string;
   category: string;
   coordinates: [number, number][];
   places?: Place[];
+  createdAt: string | number | Date;
 }
