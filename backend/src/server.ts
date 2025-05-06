@@ -19,5 +19,5 @@ app.use(reviewRoutes);
 const port = process.env.SERVER_PORT;
 app.listen(port, () => {
   // console.log(`Приложение запущено -> http://localhost:${port}`);
-  console.log(`Приложение запущено -> http://18.156.158.53:${port}`);
+  console.log(`Приложение запущено -> http://18.156.42.200:${port}`);
 });
